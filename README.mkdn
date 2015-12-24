@@ -6,7 +6,7 @@ Basic   | Spec Sheet
 CPU     | Quad-core 1.7 GHz Cortex-A53 & quad-core 1.0 GHz Cortex-A53
 Chipset | Qualcomm MSM8939 Snapdragon 615
 GPU     | Adreno 405
-Memory  | 3GB RAM
+Memory  | 2/3GB RAM
 Shipped Android Version | 5.0.2
 Storage | 16/32 GB
 MicroSD | Up to 128 GB
