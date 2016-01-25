@@ -15,7 +15,7 @@
 #
 
 # call the proprietary setup
-$(call inherit-product-if-exists, vendor/asus/Z00L/titan-vendor.mk)
+$(call inherit-product-if-exists, vendor/asus/Z00L/Z00L-vendor.mk)
 
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
