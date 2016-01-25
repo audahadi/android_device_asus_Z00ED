@@ -1,1 +1,2 @@
-# Proprietary files for Z00L
+# xditk - Camera dep
+lib/DataSet/ISP_lib_set/8916/libxditk_isp.bin:lib/DataSet/ISP/libxditk_isp.bin
