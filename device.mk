@@ -32,5 +32,5 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
 
-# Inherit from msm8939-common
-$(call inherit-product, device/asus/msm8939-common/msm8939.mk)
+# Inherit from msm8916-common
+$(call inherit-product, device/asus/msm8916-common/msm8916.mk)

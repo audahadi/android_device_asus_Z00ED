@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# inherit from common msm8939-common
--include device/asus/msm8939-common/BoardConfigCommon.mk
+# inherit from common msm8916-common
+-include device/asus/msm8916-common/BoardConfigCommon.mk
 
 DEVICE_PATH := device/asus/Z00L
 

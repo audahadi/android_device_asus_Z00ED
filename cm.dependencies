@@ -1,6 +1,6 @@
 [
   {
-    "repository": "android_device_asus_msm8939-common",
-    "target_path": "device/asus/msm8939-common"
+    "repository": "android_device_asus_msm8916-common",
+    "target_path": "device/asus/msm8916-common"
   }
 ]
