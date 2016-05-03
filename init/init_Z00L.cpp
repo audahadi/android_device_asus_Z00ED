@@ -70,14 +70,12 @@ void init_msm_properties(unsigned long msm_id , unsigned long msm_ver, char *boa
     if (ISMATCH(PRJ_ID, "0\n")) {
         if (ISMATCH(RF_SKU, "3\n")) {
             /* ZE550KG */
-            property_set("ro.product.name", "WW_Z00W");
             property_set("ro.product.model", "ASUS_Z00WD");
             property_set("ro.product.device", "ASUS_Z00W_63");
             property_set("ro.product.carrier", "US-ASUS_Z00W-WW_Z00W");
             property_set("ro.build.fingerprint", "asus/WW_Z00W/ASUS_Z00W_63:5.0.2/LRX22G/WW_user_1.17.40.1234_20160304:user/release-keys");
         } else {
             /* ZE550KL */
-            property_set("ro.product.name", "WW_Z00L");
             property_set("ro.product.model", "ASUS_Z00LD");
             property_set("ro.product.device", "ASUS_Z00L");
             property_set("ro.product.carrier", "US-ASUS_Z00L-WW_Z00L");
@@ -85,7 +83,6 @@ void init_msm_properties(unsigned long msm_id , unsigned long msm_ver, char *boa
         }
     } else if (ISMATCH(PRJ_ID, "1\n")) {
         /* ZE601KL */
-        property_set("ro.product.name", "WW_Z00M");
         property_set("ro.product.model", "ASUS_Z00MD");
         property_set("ro.product.device", "ASUS_Z00M");
         property_set("ro.product.carrier", "US-ASUS_Z00M-WW_Z00M");
