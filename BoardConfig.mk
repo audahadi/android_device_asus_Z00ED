@@ -31,9 +31,9 @@ TARGET_KERNEL_CONFIG := cyanogenmod_Z00L_defconfig
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
 # Vendor Unification Init
+TARGET_INIT_VENDOR_LIB := libinit_Z00L
+TARGET_RECOVERY_DEVICE_MODULES := libinit_Z00L
 TARGET_UNIFIED_DEVICE := true
-TARGET_INIT_VENDOR_LIB := libinit_msm
-TARGET_LIBINIT_DEFINES_FILE := $(DEVICE_PATH)/init/init_Z00L.cpp
 
 # inherit from the proprietary version
 -include vendor/asus/Z00L/BoardConfigVendor.mk

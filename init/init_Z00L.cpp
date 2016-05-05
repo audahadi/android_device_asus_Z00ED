@@ -36,9 +36,9 @@
 #include "log.h"
 #include "util.h"
 
-#include "init_msm.h"
+#define ISMATCH(a,b)    (!strncmp(a,b,PROP_VALUE_MAX))
 
-void init_msm_properties(unsigned long msm_id , unsigned long msm_ver, char *board_type)
+void vendor_load_properties()
 {
     char platform[PROP_VALUE_MAX];
     char device[PROP_VALUE_MAX];
@@ -46,10 +46,6 @@ void init_msm_properties(unsigned long msm_id , unsigned long msm_ver, char *boa
     char RF_SKU[PROP_VALUE_MAX];
     int rc;
     FILE *fp;
-
-    UNUSED(msm_id);
-    UNUSED(msm_ver);
-    UNUSED(board_type);
 
     rc = property_get("ro.board.platform", platform);
     if (!rc || !ISMATCH(platform, ANDROID_TARGET))
