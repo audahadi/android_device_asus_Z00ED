@@ -61,7 +61,7 @@ void vendor_load_properties()
 
     /* Common properties */
     property_set("ro.build.product", "Z00L");
-    property_set("ro.build.description", "Z00L-user 5.0.2 LRX22G WW_user_1.17.40.1234_20160304 release-keys");
+    property_set("ro.build.description", "Z00L-user 5.0.2 LRX22G WW_user_1.17.40.1531_20160428 release-keys");
 
     if (ISMATCH(PRJ_ID, "0\n")) {
         if (ISMATCH(RF_SKU, "3\n")) {
@@ -69,20 +69,20 @@ void vendor_load_properties()
             property_set("ro.product.model", "ASUS_Z00WD");
             property_set("ro.product.device", "ASUS_Z00W_63");
             property_set("ro.product.carrier", "US-ASUS_Z00W-WW_Z00W");
-            property_set("ro.build.fingerprint", "asus/WW_Z00W/ASUS_Z00W_63:5.0.2/LRX22G/WW_user_1.17.40.1234_20160304:user/release-keys");
+            property_set("ro.build.fingerprint", "asus/WW_Z00W/ASUS_Z00W_63:5.0.2/LRX22G/WW_user_1.17.40.1531_20160428:user/release-keys");
         } else {
             /* ZE550KL */
             property_set("ro.product.model", "ASUS_Z00LD");
             property_set("ro.product.device", "ASUS_Z00L");
             property_set("ro.product.carrier", "US-ASUS_Z00L-WW_Z00L");
-            property_set("ro.build.fingerprint", "asus/WW_Z00L/ASUS_Z00L:5.0.2/LRX22G/WW_user_1.17.40.1234_20160304:user/release-keys");
+            property_set("ro.build.fingerprint", "asus/WW_Z00L/ASUS_Z00L:5.0.2/LRX22G/WW_user_1.17.40.1531_20160428:user/release-keys");
         }
     } else if (ISMATCH(PRJ_ID, "1\n")) {
         /* ZE601KL */
         property_set("ro.product.model", "ASUS_Z00MD");
         property_set("ro.product.device", "ASUS_Z00M");
         property_set("ro.product.carrier", "US-ASUS_Z00M-WW_Z00M");
-        property_set("ro.build.fingerprint", "asus/WW_Z00M/ASUS_Z00M:5.0.2/LRX22G/WW_user_1.17.40.1234_20160304:user/release-keys");
+        property_set("ro.build.fingerprint", "asus/WW_Z00M/ASUS_Z00M:5.0.2/LRX22G/WW_user_1.17.40.1531_20160428:user/release-keys");
     }
 
     property_get("ro.product.device", device);
