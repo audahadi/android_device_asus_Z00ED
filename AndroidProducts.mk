@@ -14,4 +14,4 @@
 # limitations under the License.
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/full_Z00L.mk
+    $(LOCAL_DIR)/full_Z010D.mk

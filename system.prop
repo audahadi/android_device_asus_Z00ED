@@ -1,5 +1,5 @@
 # Carrier
-ro.product.carrier=US-ASUS_Z00L-WW_Z00L
+ro.product.carrier=US-ASUS_Z010D-WW_Phone
 
 # Display
 ro.sf.lcd_density=320

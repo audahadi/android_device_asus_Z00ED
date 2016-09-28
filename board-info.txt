@@ -1,2 +1,2 @@
-require version-variant=ZE550KL
-require version-trustzone=TZ.BF.3.0.C3-00025
+require version-variant=ZC550KL
+#require version-trustzone=TZ.BF.3.0.C3-00025
