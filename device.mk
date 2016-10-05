@@ -30,3 +30,6 @@ TARGET_SCREEN_WIDTH := 720
 
 # Inherit from msm8916-common
 $(call inherit-product, device/asus/msm8916-common/msm8916.mk)
+
+PRODUCT_COPY_FILEs += \
+    device/asus/Z010D/init:$(TARGET_ROOT_OUT)/init_vendor
