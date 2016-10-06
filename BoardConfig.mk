@@ -26,8 +26,6 @@ TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
 # Kernel
 TARGET_KERNEL_CONFIG := zc550kl-perf_defconfig
-
-BOARD_KERNEL_CMDLINE := ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive
 TARGET_KERNEL_SOURCE := kernel/asus/Z010D
 
 # Properties
