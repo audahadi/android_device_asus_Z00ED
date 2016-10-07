@@ -31,6 +31,12 @@ TARGET_SCREEN_WIDTH := 720
 # Inherit from msm8916-common
 $(call inherit-product, device/asus/msm8916-common/msm8916.mk)
 
+PRODUCT_PACKAGES += \
+    init.qcom.rc
+
+PRODUCT_COPY_FILES += \
+    device/asus/Z010D/sensor/sensor_init.sh:system/etc/sensor_init.sh
+
 # Development settings
 ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.debuggable=1 \
