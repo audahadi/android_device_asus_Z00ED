@@ -37,6 +37,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     device/asus/Z010D/sensor/sensor_init.sh:system/etc/sensor_init.sh
 
+PRODUCT_COPY_FILES += \
+    device/asus/Z010D/audio/mixer_paths_mtp.xml:system/etc/mixer_paths_mtp.xml
+
 # Development settings
 ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.debuggable=1 \
