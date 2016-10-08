@@ -20,7 +20,7 @@ $(call inherit-product-if-exists, vendor/asus/Z010D/Z010D-vendor.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
 
 # Overlay
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+DEVICE_PACKAGE_OVERLAYS += device/asus/Z010D/overlay
 
 # Screen density
 PRODUCT_AAPT_CONFIG := normal
@@ -56,6 +56,16 @@ PRODUCT_COPY_FILES += \
     device/asus/Z010D/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
     device/asus/Z010D/wifi/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     device/asus/Z010D/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+
+# Keylayout
+PRODUCT_COPY_FILES += \
+    device/asus/Z010D/keylayout/ASUS_TransKeyboard.kl:system/usr/keylayout/ASUS_TransKeyboard.kl \
+    device/asus/Z010D/keylayout/focal-touchscreen.kl:system/usr/keylayout/focal-touchscreen.kl \
+    device/asus/Z010D/keylayout/ft5x06_ts.kl:system/usr/keylayout/ft5x06_ts.kl \
+    device/asus/Z010D/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
+    device/asus/Z010D/keylayout/i-rocks_Bluetooth_Keyboard.kl:system/usr/keylayout/i-rocks_Bluetooth_Keyboard.kl \
+    device/asus/Z010D/keylayout/synaptics_dsx.kl:system/usr/keylayout/synaptics_dsx.kl \
+    device/asus/Z010D/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl
 
 # Development settings
 ADDITIONAL_DEFAULT_PROPERTIES += \
