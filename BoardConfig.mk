@@ -25,7 +25,7 @@ TARGET_OTA_ASSERT_DEVICE := Z010D,Z010,ASUS_Z010
 TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
 # Kernel
-TARGET_KERNEL_CONFIG := zc550kl-perf_defconfig
+TARGET_KERNEL_CONFIG := cm-zc550kl_defconfig
 TARGET_KERNEL_SOURCE := kernel/asus/Z010D
 
 # Properties
