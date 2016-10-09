@@ -34,7 +34,7 @@ TARGET_SCREEN_WIDTH := 720
 $(call inherit-product, device/asus/msm8916-common/msm8916.mk)
 
 PRODUCT_PACKAGES += \
-    init.qcom.rc
+    init.target.rc
 
 PRODUCT_COPY_FILES += \
     device/asus/Z010D/sensor/sensor_init.sh:system/etc/sensor_init.sh
@@ -52,10 +52,18 @@ PRODUCT_COPY_FILES += \
     device/asus/Z010D/audio/acdbdata/QRD/QRD_Headset_cal.acdb:system/etc/acdbdata/QRD/QRD_Headset_cal.acdb \
     device/asus/Z010D/audio/acdbdata/QRD/QRD_Speaker_cal.acdb:system/etc/acdbdata/QRD/QRD_Speaker_cal.acdbc
 
+# wifi
+PRODUCT_PACKAGES += \
+    hostapd_default.conf \
+    p2p_supplicant_overlay.conf \
+    wpa_supplicant_overlay.conf \
+    WCNSS_qcom_wlan_nv.bin \
+    WCNSS_qcom_wlan_nv_zc550kl.bin
+
 PRODUCT_COPY_FILES += \
     device/asus/Z010D/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
     device/asus/Z010D/wifi/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
-    device/asus/Z010D/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+    device/asus/Z010D/wifi/WCNSS_wlan_dictionary.dat:system/etc/firmware/wlan/prima/WCNSS_wlan_dictionary.dat
 
 # Keylayout
 PRODUCT_COPY_FILES += \
