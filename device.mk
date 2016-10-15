@@ -57,8 +57,7 @@ PRODUCT_PACKAGES += \
     hostapd_default.conf \
     p2p_supplicant_overlay.conf \
     wpa_supplicant_overlay.conf \
-    WCNSS_qcom_wlan_nv.bin \
-    WCNSS_qcom_wlan_nv_zc550kl.bin
+    WCNSS_qcom_wlan_nv.bin
 
 PRODUCT_COPY_FILES += \
     device/asus/Z010D/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
