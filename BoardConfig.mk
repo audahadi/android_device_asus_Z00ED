@@ -27,12 +27,16 @@ TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 # Kernel
 TARGET_KERNEL_CONFIG := cm-zc550kl_defconfig
 TARGET_KERNEL_SOURCE := kernel/asus/Z010D
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive
 
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
 TARGET_INIT_VENDOR_LIB := libinit_z010d
 TARGET_RECOVERY_DEVICE_MODULES := libinit_z010d
+
+#Enable SW based full disk encryption
+TARGET_SWV8_DISK_ENCRYPTION := true
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
