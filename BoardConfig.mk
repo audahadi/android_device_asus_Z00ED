@@ -35,9 +35,6 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 TARGET_INIT_VENDOR_LIB := libinit_z010d
 TARGET_RECOVERY_DEVICE_MODULES := libinit_z010d
 
-# Tap-to-Wake		
-TARGET_TAP_TO_WAKE_NODE := "/sys/bus/i2c/devices/5-0038/dclick_mode"
-
 #Enable SW based full disk encryption
 TARGET_SWV8_DISK_ENCRYPTION := true
 
