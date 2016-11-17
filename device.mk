@@ -65,17 +65,6 @@ PRODUCT_PACKAGES += \
     wpa_supplicant_overlay.conf \
     WCNSS_qcom_wlan_nv.bin
 
-# Sensors
-PRODUCT_PACKAGES += \
-    calmodule.cfg \
-    libcalmodule_common \
-    sensors.msm8916
-
-# Properties
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.fusion.magfield.max=250
-
-
 PRODUCT_COPY_FILES += \
     device/asus/Z010D/wifi/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
     device/asus/Z010D/wifi/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
