@@ -3,11 +3,9 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE_TAGS := optional
-LOCAL_C_INCLUDES := \
-    system/core/init \
-    device/asus/msm8916-common/init
+LOCAL_C_INCLUDES := system/core/init
 LOCAL_CFLAGS := -Wall -DANDROID_TARGET=\"$(TARGET_BOARD_PLATFORM)\"
-LOCAL_SRC_FILES := init_z010d.cpp
-LOCAL_MODULE := libinit_z010d
+LOCAL_SRC_FILES := init_msm8916.cpp
+LOCAL_MODULE := libinit_msm8916
 
 include $(BUILD_STATIC_LIBRARY)

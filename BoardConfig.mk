@@ -32,8 +32,8 @@ BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 an
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
-TARGET_INIT_VENDOR_LIB := libinit_z010d
-TARGET_RECOVERY_DEVICE_MODULES := libinit_z010d
+TARGET_INIT_VENDOR_LIB := libinit_msm8916
+TARGET_RECOVERY_DEVICE_MODULES := libinit_msm8916
 
 #Enable SW based full disk encryption
 TARGET_SWV8_DISK_ENCRYPTION := true

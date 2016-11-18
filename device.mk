@@ -17,8 +17,6 @@
 # call the proprietary setup
 $(call inherit-product-if-exists, vendor/asus/Z010D/Z010D-vendor.mk)
 
-$(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
-
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += device/asus/Z010D/overlay
 
@@ -79,4 +77,3 @@ PRODUCT_COPY_FILES += \
     device/asus/Z010D/keylayout/i-rocks_Bluetooth_Keyboard.kl:system/usr/keylayout/i-rocks_Bluetooth_Keyboard.kl \
     device/asus/Z010D/keylayout/synaptics_dsx.kl:system/usr/keylayout/synaptics_dsx.kl \
     device/asus/Z010D/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl
-
