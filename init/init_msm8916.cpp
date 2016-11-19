@@ -41,42 +41,10 @@
 
 char const *device;
 char const *family;
-char const *product;
 char const *heapstartsize;
 char const *heapgrowthlimit;
 char const *heapsize;
 char const *heapminfree;
-
-static void init_alarm_boot_properties()
-{
-    int boot_reason;
-    FILE *fp;
-
-    fp = fopen("/proc/sys/kernel/boot_reason", "r");
-    fscanf(fp, "%d", &boot_reason);
-    pclose(fp);
-
-    /*
-     * Setup ro.alarm_boot value to true when it is RTC triggered boot up
-     * For existing PMIC chips, the following mapping applies
-     * for the value of boot_reason:
-     *
-     * 0 -> unknown
-     * 1 -> hard reset
-     * 2 -> sudden momentary power loss (SMPL)
-     * 3 -> real time clock (RTC)
-     * 4 -> DC charger inserted
-     * 5 -> USB charger inserted
-     * 6 -> PON1 pin toggled (for secondary PMICs)
-     * 7 -> CBLPWR_N pin toggled (for external power supply)
-     * 8 -> KPDPWR_N pin toggled (power key pressed)
-     */
-     if (boot_reason == 3) {
-        property_set("ro.alarm_boot", "true");
-     } else {
-        property_set("ro.alarm_boot", "false");
-     }
-}
 
 void vendor_load_properties()
 {
@@ -90,17 +58,14 @@ void vendor_load_properties()
     if (!rc || !ISMATCH(platform, ANDROID_TARGET))
         return;
 
-    init_alarm_boot_properties();
-
     /* Device Setting */
     family = "WW_Phone";
     device = "Z010D";
-    product = "ZC550KL"; // need for Сamera Hal project ID check
 
     /* Heap Setting */
-    heapstartsize = "5m";
-    heapgrowthlimit = "128m";
-    heapsize = "256m";
+    heapstartsize = "8m";
+    heapgrowthlimit = "192m";
+    heapsize = "512m";
     heapminfree = "512k";
 
     sprintf(b_description, "%s-user 6.0.1 MMB29P 13.8.26.46-20160812 release-keys", family);
@@ -109,7 +74,6 @@ void vendor_load_properties()
     sprintf(p_device, "ASUS_%s_1", device);
     sprintf(p_carrier, "US-ASUS_%s-%s", device, family);
 
-    property_set("ro.build.product", product);
     property_set("ro.build.description", b_description);
     property_set("ro.build.fingerprint", b_fingerprint);
     property_set("ro.product.carrier", p_carrier);
