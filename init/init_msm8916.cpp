@@ -79,6 +79,7 @@ void vendor_load_properties()
     property_set("ro.product.carrier", p_carrier);
     property_set("ro.product.device", p_device);
     property_set("ro.product.model", p_model);
+    property_set("ro.build.product", "ZC550KL");
 
     /* Heap Set */
     property_set("dalvik.vm.heapstartsize", heapstartsize);
