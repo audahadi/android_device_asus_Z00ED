@@ -1,2 +1,5 @@
 # Display
 ro.sf.lcd_density=320
+
+# Set min freq
+ro.min_freq_0=400000
