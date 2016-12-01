@@ -31,13 +31,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
 
 #include "vendor_init.h"
 #include "property_service.h"
 #include "log.h"
 #include "util.h"
 
-#define ISMATCH(a,b)    (!strncmp(a,b,PROP_VALUE_MAX))
+#define RAW_ID_PATH     "/sys/devices/soc0/raw_id"
+#define BUF_SIZE         64
+
+static char tmp[BUF_SIZE];
+static char buff_tmp[BUF_SIZE];
 
 char const *device;
 char const *family;
@@ -46,17 +51,45 @@ char const *heapgrowthlimit;
 char const *heapsize;
 char const *heapminfree;
 
+static int read_file2(const char *fname, char *data, int max_size)
+{
+    int fd, rc;
+
+    if (max_size < 1)
+        return 0;
+
+    fd = open(fname, O_RDONLY);
+    if (fd < 0) {
+        ERROR("failed to open '%s'\n", fname);
+        return 0;
+    }
+
+    rc = read(fd, data, max_size - 1);
+    if ((rc > 0) && (rc < max_size))
+        data[rc] = '\0';
+    else
+        data[0] = '\0';
+    close(fd);
+
+    return 1;
+}
+
 void vendor_load_properties()
 {
 
     char b_description[PROP_VALUE_MAX], b_fingerprint[PROP_VALUE_MAX];
     char p_carrier[PROP_VALUE_MAX], p_device[PROP_VALUE_MAX], p_model[PROP_VALUE_MAX];
-    char platform[PROP_VALUE_MAX];
+    unsigned long raw_id = -1;
     int rc;
 
-    rc = property_get("ro.board.platform", platform);
-    if (!rc || !ISMATCH(platform, ANDROID_TARGET))
-        return;
+    /* get raw ID */
+    rc = read_file2(RAW_ID_PATH, tmp, sizeof(tmp));
+    if (rc) {
+        raw_id = strtoul(tmp, NULL, 0);
+    }
+
+    /* Z010D  */
+    if (raw_id==1797) {
 
     /* Device Setting */
     family = "WW_Phone";
@@ -70,15 +103,14 @@ void vendor_load_properties()
 
     sprintf(b_description, "%s-user 6.0.1 MMB29P 13.8.26.46-20160812 release-keys", family);
     sprintf(b_fingerprint, "asus/%s/ASUS_%s:6.0.1/MMB29P/13.8.26.46-20160812:user/release-keys", family, device);
-    sprintf(p_model, "ASUS_%s", device);
-    sprintf(p_device, "ASUS_%s_1", device);
+    sprintf(p_device, "ASUS_%s", device);
     sprintf(p_carrier, "US-ASUS_%s-%s", device, family);
 
     property_set("ro.build.description", b_description);
     property_set("ro.build.fingerprint", b_fingerprint);
     property_set("ro.product.carrier", p_carrier);
     property_set("ro.product.device", p_device);
-    property_set("ro.product.model", p_model);
+    property_set("ro.product.model", "Zenfone Max");
     property_set("ro.build.product", "ZC550KL");
 
     /* Heap Set */
@@ -88,6 +120,10 @@ void vendor_load_properties()
     property_set("dalvik.vm.heaptargetutilization", "0.75");
     property_set("dalvik.vm.heapminfree", heapminfree);
     property_set("dalvik.vm.heapmaxfree", "2m");
+
+    } else {
+        property_set("ro.product.model", "Zenfone"); // this should never happen.
+    }
 
     INFO("Setting build properties for %s device of %s family\n", device, family);
 }

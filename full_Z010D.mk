@@ -18,10 +18,10 @@
 $(call inherit-product, device/asus/Z010D/device.mk)
 
 # Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := Z010D
 PRODUCT_NAME := full_Z010D
+PRODUCT_DEVICE := Z010D
 PRODUCT_BRAND := asus
-PRODUCT_MODEL := Z010D
+PRODUCT_MODEL := Zenfone Max
 PRODUCT_MANUFACTURER := asus
 
-PRODUCT_BUILD_PROP_OVERRIDES += TARGET_DEVICE=ZC550KL
+PRODUCT_GMS_CLIENTID_BASE := android-asus
