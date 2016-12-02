@@ -88,12 +88,12 @@ void vendor_load_properties()
         raw_id = strtoul(tmp, NULL, 0);
     }
 
-    /* Z010D  */
+    /* Z00ED  */
     if (raw_id==1797) {
 
     /* Device Setting */
     family = "WW_Phone";
-    device = "Z010D";
+    device = "Z00ED";
 
     /* Heap Setting */
     heapstartsize = "8m";
@@ -110,8 +110,8 @@ void vendor_load_properties()
     property_set("ro.build.fingerprint", b_fingerprint);
     property_set("ro.product.carrier", p_carrier);
     property_set("ro.product.device", p_device);
-    property_set("ro.product.model", "Zenfone Max");
-    property_set("ro.build.product", "ZC550KL");
+    property_set("ro.product.model", "Zenfone 2 Laser");
+    property_set("ro.build.product", "ZE500KL");
 
     /* Heap Set */
     property_set("dalvik.vm.heapstartsize", heapstartsize);

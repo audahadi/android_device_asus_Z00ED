@@ -16,16 +16,16 @@
 # inherit from common msm8916-common
 -include device/asus/msm8916-common/BoardConfigCommon.mk
 
-DEVICE_PATH := device/asus/Z010D
+DEVICE_PATH := device/asus/Z00ED
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := Z010D,Z010,ASUS_Z010
+TARGET_OTA_ASSERT_DEVICE := Z00ED,Z00E,ASUS_Z00E
 
 # Board
 TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
 # Kernel
-TARGET_KERNEL_CONFIG := zc550kl-custom_defconfig
+TARGET_KERNEL_CONFIG := ze500kl-custom_defconfig
 TARGET_KERNEL_SOURCE := kernel/asus/Z010D
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive
 

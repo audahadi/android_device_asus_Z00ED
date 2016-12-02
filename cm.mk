@@ -6,12 +6,12 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit from device specific
-$(call inherit-product, device/asus/Z010D/full_Z010D.mk)
+$(call inherit-product, device/asus/Z00ED/full_Z00ED.mk)
 
-PRODUCT_NAME := cm_Z010D
-PRODUCT_DEVICE := Z010D
+PRODUCT_NAME := cm_Z00ED
+PRODUCT_DEVICE := Z00ED
 PRODUCT_BRAND := asus
-PRODUCT_MODEL := Zenfone Max
+PRODUCT_MODEL := Zenfone 2 Laser
 PRODUCT_MANUFACTURER := asus
 
 PRODUCT_GMS_CLIENTID_BASE := android-asus

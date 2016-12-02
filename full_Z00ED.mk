@@ -14,14 +14,14 @@
 # limitations under the License.
 #
 
-# Inherit from Z010D device
-$(call inherit-product, device/asus/Z010D/device.mk)
+# Inherit from Z00ED device
+$(call inherit-product, device/asus/Z00ED/device.mk)
 
 # Device identifier. This must come after all inclusions
-PRODUCT_NAME := full_Z010D
-PRODUCT_DEVICE := Z010D
+PRODUCT_NAME := full_Z00ED
+PRODUCT_DEVICE := Z00ED
 PRODUCT_BRAND := asus
-PRODUCT_MODEL := Zenfone Max
+PRODUCT_MODEL := Zenfone 2 Laser
 PRODUCT_MANUFACTURER := asus
 
 PRODUCT_GMS_CLIENTID_BASE := android-asus
