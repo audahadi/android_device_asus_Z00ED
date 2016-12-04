@@ -53,4 +53,4 @@ WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # inherit from the proprietary version
--include vendor/asus/Z010D/BoardConfigVendor.mk
+-include vendor/asus/Z00E/BoardConfigVendor.mk
