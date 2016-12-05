@@ -1,197 +1,44 @@
-service sp /bin/sp
-    user root
-    group root
-    seclabel u:r:asus_sp:s0
-    disabled
-    oneshot
-
-# for ssn tool
-service ssn /system/bin/ssn
-    class core
-    seclabel u:r:asus_ssn:s0
-    oneshot
-
-# unmount APD service
-service umount_apd /system/bin/sh /system/bin/umount_apd.sh
-    user root
-    disabled
-    oneshot
-
-#+++ASUS_BSP gauss_li
-on bank
-       start shawnA
-#---ASUS_BSP gauss_li
-#mount asdf
-    wait /dev/block/bootdevice/by-name/asdf
-    exec /system/bin/e2fsck -p /dev/block/bootdevice/by-name/asdf
-    mount ext4 /dev/block/bootdevice/by-name/asdf /asdf nosuid nodev barrier=1
-
-    write /proc/asusevtlog "Enter bank"
-
-
-on firmware_mounts_complete
-    start sp
+# Copyright (c) 2009-2012, 2014-2015, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of The Linux Foundation nor
+#       the names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
 
 on boot
-    chmod 0444 /proc/cmdline
 
-on init
-    export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin:/bin
-
-# mount asus partition
-    mkdir /factory 0775 system system
-    mkdir /factoryback 0775 system system
-    mkdir /asusfw 0775 system system
-    mkdir /asdf
-    mkdir /ADF 0775 system system
-    mkdir /APD 0775 system system
-
-on fs
-# +++ ASUS_BSP : add for asus boot animation partition
-# mount ADF
-    wait /dev/block/bootdevice/by-name/ADF
-    mount ext4 /dev/block/bootdevice/by-name/ADF /ADF nosuid nodev barrier=1 data=ordered
-    chmod 0775 /ADF
-    chmod 0775 /ADF/boot
-    chown system system /ADF
-    restorecon_recursive /ADF
-
-    wait /dev/block/bootdevice/by-name/APD
-    mount ext4 /dev/block/bootdevice/by-name/APD /APD nosuid nodev barrier=1 data=ordered
-    chmod 0775 /APD
-    chown system system /APD
-    restorecon_recursive /APD
-# --- ASUS_BSP : add for asus boot animation partition
-
-# Freeman add for GTS  +++
-chmod 0660 /dev/block/bootdevice/by-name/persistent
-chown system system /dev/block/bootdevice/by-name/persistent
-chmod 0660 /dev/block/mmcblk0p24
-chown system system /dev/block/mmcblk0p24
-# Freeman add for GTS  ---
-
-# mount asusfw
-    wait /dev/block/bootdevice/by-name/asusfw
-    exec /system/bin/e2fsck -p /dev/block/bootdevice/by-name/asusfw
-    mount ext4 /dev/block/bootdevice/by-name/asusfw /asusfw nosuid nodev barrier=1 noauto_da_alloc
-    restorecon_recursive /asusfw
-    chmod 0775 /asusfw
-    chown system system /asusfw
-    
-    start FWAuto
-
-on post-fs
+#ASUS_BSP +++ "Light/Proximity sensor"
+chown system shell /sys/devices/virtual/sensors/psensor/switch
+chown system shell /sys/devices/virtual/sensors/lsensor/switch
+chown system shell /sys/devices/virtual/sensors/psensor/hi_cal
+chown system shell /sys/devices/virtual/sensors/psensor/low_cal
+chown system shell /sys/devices/virtual/sensors/psensor/proxm
+chown system shell /sys/devices/virtual/sensors/lsensor/200lux_cal
+chown system shell /sys/devices/virtual/sensors/lsensor/1000lux_cal
+chown system shell /sys/devices/virtual/sensors/lsensor/adc
+#ASUS_BSP ---
 
 on post-fs-data
-
-# ASUS_BSP +++ Lei_Guo "storage info for ATD and AMAX"
-    symlink /sys/bus/mmc/devices/mmc0:0001/emmc_status /data/data/emmc_status
-    symlink /sys/bus/mmc/devices/mmc0:0001/emmc_size /data/data/emmc_size
-    symlink /sys/bus/mmc/devices/mmc0:0001/emmc_prv /data/data/emmc_fw
-    symlink /sys/bus/mmc/devices/mmc0:0001/emmc_fw_version /data/data/emmc_fw_version
-    symlink /sys/bus/mmc/devices/mmc0:0001/emmc_total_size /data/data/emmc_total_size
-    symlink /sys/devices/soc.0/7864900.sdhci/mmc_host/mmc1/sd_status /data/data/sd_status
-
-    chmod 0777 /data/data/emmc_status
-    chmod 0777 /data/data/emmc_size
-    chmod 0777 /data/data/emmc_fw
-    chmod 0777 /data/data/emmc_fw_version
-    chmod 0777 /data/data/emmc_total_size
-    chmod 0777 /data/data/sd_status
-# ASUS_BSP --- Lei_Guo "storage info for ATD and AMAX"
-
-# ASUS_BSP +++ Desmond "demoapp related"
-# Disable demoapp by default
-    setprop persist.sys.enableAPD 0
-# ASUS_BSP --- Desmond "demoapp related"
-
-# mount factory
-    wait /dev/block/bootdevice/by-name/factory
-    exec /system/bin/e2fsck -p /dev/block/bootdevice/by-name/factory
-    mount ext4 /dev/block/bootdevice/by-name/factory /factory ro nosuid nodev barrier=1 noauto_da_alloc
-    restorecon_recursive /factory
-    chmod 0775 /factory
-    chown root shell /factory
-
-    start CheckProp
-
-# mount asdf
-    wait /dev/block/bootdevice/by-name/asdf
-    exec /system/bin/e2fsck -p /dev/block/bootdevice/by-name/asdf
-    mount ext4 /dev/block/bootdevice/by-name/asdf /asdf nosuid nodev barrier=1
-    chmod 0777 /asdf
-    restorecon_recursive /asdf
-    start check_last
-
-#ASUS_BSP+++ [thomas]move from init.asus.debugtool.rc
-	chmod 0775 /data/log
-#ASUS_BSP--- [thomas]move from init.asus.debugtool.rc
-
-# ASUS Freeman add for BMMI test ++++
-	symlink /sys/bus/i2c/devices/5-0038/touch_status /data/data/touch_status
-	chmod 0777 /data/data/touch_status
-	symlink /sys/bus/i2c/devices/5-0038/update_progress /data/touch_update_progress
-	chmod 0777 /data/touch_update_progress
-	chown system system /sys/bus/i2c/devices/5-0038/fw_upgradeapp
-	chown system system /sys/bus/i2c/devices/5-0038/fw_version
-	chown system system /sys/bus/i2c/devices/5-0038/ftstprwreg
-	chown system system /sys/bus/i2c/devices/5-0038/fw_info
-	chown system system /sys/bus/i2c/devices/5-0038/ftresetic
-	chown system system /sys/bus/i2c/devices/5-0038/glove_mode
-	chown system system /proc/asus_touch_proximity_status
-# ASUS Freeman add for BMMI test ----
-
-# mount debugfs
-    mount debugfs debugfs /sys/kernel/debug
-
-#ASUS_BSP Deeo : add for Led test +++
-    rm /data/data/LedTest
-    symlink /system/bin/LedTest /data/data/LedTest
-    chmod 0777 /data/data/LedTest
-    chmod 0666 /sys/class/leds/red/brightness
-    chmod 0666 /sys/class/leds/green/brightness
-    chown system system /sys/class/leds/red/blink
-    chmod 0666 /sys/class/leds/red/blink
-    chown system system /sys/class/leds/green/blink
-    chmod 0666 /sys/class/leds/green/blink
-    chown system system /sys/class/leds/blue/blink
-    chmod 0666 /sys/class/leds/blue/blink
-    chown system system /sys/class/leds/mix/brightness
-    chmod 0666 /sys/class/leds/mix/brightness
-    chown system system /sys/class/leds/mix/blink
-    chmod 0666 /sys/class/leds/mix/blink
-#ASUS_BSP Deeo : add for Led test ---
-
-#ASUS_BSP Jeff_Gu : add for Led blink time +++
-    chown system system /sys/class/leds/red/on_ms
-    chmod 0664 /sys/class/leds/red/on_ms
-    chown system system /sys/class/leds/green/on_ms
-    chmod 0664 /sys/class/leds/green/on_ms
-    chown system system /sys/class/leds/red/off_ms
-    chmod 0664 /sys/class/leds/red/off_ms
-    chown system system /sys/class/leds/green/off_ms
-    chmod 0664 /sys/class/leds/green/off_ms
-#ASUS_BSP Jeff_Gu : add for Led blink time ---
-
-# +++ ASUS_BSP tyree_liu@asus.com symlink to AudioroutingTest
-    symlink /system/bin/AudioRoutingTest /data/data/AudioRoutingTest
-# --- ASUS_BSP tyree_liu@asus.com symlink to AudioroutingTest
-
-#ASUS_BSP David "[BAT]add BMMI interface for ATD"
-    symlink /proc/driver/charger_limit_enable /data/data/charger_limit_enable
-    symlink /proc/driver/chargerIC_status /data/data/chargerIC_status
-    symlink /proc/driver/gaugeIC_status /data/data/gaugeIC_status
-    symlink /sys/class/power_supply/battery/capacity /data/data/battery_status
-    symlink /sys/class/power_supply/battery/capacity /data/data/BatteryCapacity
-    symlink /proc/driver/bat_current /data/data/BatteryCurrent
-    symlink /proc/driver/bat_voltage /data/data/BatteryVoltage
-
-#ASUS_BSP+++ Bernard "link BLTest for ATD test"
-    chown system system /sys/class/leds/lcd-backlight/brightness
-    chmod 0664 /sys/class/leds/lcd-backlight/brightness
-    symlink /sys/class/leds/lcd-backlight/brightness /data/data/BLTest
-    chmod 777 /data/data/BLTest
-#ASUS_BSP--- Bernard "link BLTest for ATD test"
 
 #ASUS_BSP +++ Stimber_Hsueh "implement camera interface for ATD"
 	rm /data/data/camera_status
@@ -222,10 +69,9 @@ on post-fs-data
 	chown system shell /data/data/RestoreCalibrationData
 #ASUS_BSP --- PJ "implement CalibrationBackup interface for ATD&DIT"
 
-
 #ASUS_BSP +++ srhuang "Hall Sensor"
-	symlink /sys/bus/platform/devices/soc.0/hall_sensor/hall_sensor/status	/data/data/hallsensor_status
-	symlink /sys/bus/platform/devices/soc.0/hall_sensor/hall_sensor/debounce	/data/data/hallsensor_debounce
+	symlink /sys/class/sensors/hallsensor/status	/data/data/hallsensor_status
+	symlink /sys/class/sensors/hallsensor/debounce 	/data/data/hallsensor_debounce
 	chmod 0600 /data/data/hallsensor_status
 	chmod 0600 /data/data/hallsensor_debounce
 #ASUS_BSP --- srhuang "Hall Sensor"
@@ -235,46 +81,54 @@ on post-fs-data
 	chown system shell /sys/bus/i2c/devices/0-001f/flip
 	chown system shell /sys/bus/i2c/devices/0-001f/flick
 	chown system shell /sys/bus/i2c/devices/0-001f/hands
+	chown system shell /sys/bus/i2c/devices/0-001f/moving
 #ASUS_BSP --- srhuang "Zen Motion"
 
-#ASUS_BSP +++ Surya_Xu "CSC Laser"
-	chown media sdcard_rw /proc/driver/LaserFocus_on
-	chown media sdcard_rw /proc/driver/LaserFocus_value
-	chown system sdcard_rw /proc/driver/LaserFocus_Status
-	chown media sdcard_rw /proc/driver/LaserFocus_Status_For_Camera
-	chown system sdcard_rw /proc/driver/LaserFocus_CalStart
-	chown system sdcard_rw /proc/driver/LaserFocus_enforce
-	chown system sdcard_rw /proc/driver/LaserFocus_value_more_info
-	chown system sdcard_rw /proc/driver/LaserFocus_debug_dump
-	chown system sdcard_rw /proc/driver/LaserFocus_I2c_Status
+# ASUS_BSP +++ LaserFocus "Camera LaserFocus sensor VL6180"
+  chown media sdcard_rw /proc/driver/LaserFocus_on
+  chown media sdcard_rw /proc/driver/LaserFocus_value
+  chown system sdcard_rw /proc/driver/LaserFocus_value_more_info
+  chown system sdcard_rw /proc/driver/LaserFocus_Status
+  chown media sdcard_rw /proc/driver/LaserFocus_Status_For_Camera
+  chown system sdcard_rw /proc/driver/LaserFocus_CalStart
+  chown system sdcard_rw /proc/driver/LaserFocus_enforce
+  chown system sdcard_rw /proc/driver/LaserFocus_debug_dump
+  chown system sdcard_rw /proc/driver/LaserFocus_CalGetInputData
+  chown media sdcard_rw /factory/laura_cal_data.txt
 
-	rm /data/data/LaserFocus_on
-	rm /data/data/LaserFocus_value
-	rm /data/data/LaserFocus_value_more_info
-	rm /data/data/LaserFocus_Status
-	rm /data/data/LaserFocus_CalStart
-	rm /data/data/LaserFocus_disable
-	rm /data/data/LaserFocus_debug_dump
-	rm /data/data/LaserFocus_I2c_Status
+  rm /data/data/LaserFocus_on
+  rm /data/data/LaserFocus_value
+  rm /data/data/LaserFocus_value_more_info
+  rm /data/data/LaserFocus_Status
+  rm /data/data/LaserFocus_CalStart
+  rm /data/data/LaserFocus_disable
+  rm /data/data/LaserFocus_debug_dump
 
-	symlink /system/bin/LaserFocus_on /data/data/LaserFocus_on
-	symlink /proc/driver/LaserFocus_value /data/data/LaserFocus_value
-	symlink /proc/driver/LaserFocus_value_more_info /data/data/LaserFocus_value_more_info
-	symlink /proc/driver/LaserFocus_Status /data/data/LaserFocus_Status
-	symlink /system/bin/LaserFocus_CalStart /data/data/LaserFocus_CalStart
-	symlink /system/bin/LaserFocus_enforce /data/data/LaserFocus_disable
-	symlink /proc/driver/LaserFocus_debug_dump /data/data/LaserFocus_debug_dump
-	symlink /proc/driver/LaserFocus_I2c_Status /data/data/LaserFocus_I2c_Status
-#ASUS_BSP --- Surya_Xu "CSC Laser"
+  symlink /system/bin/LaserFocus_on /data/data/LaserFocus_on
+  symlink /proc/driver/LaserFocus_value /data/data/LaserFocus_value
+  symlink /proc/driver/LaserFocus_value_more_info /data/data/LaserFocus_value_more_info
+  symlink /proc/driver/LaserFocus_Status /data/data/LaserFocus_Status
+  symlink /system/bin/LaserFocus_CalStart /data/data/LaserFocus_CalStart
+  symlink /system/bin/LaserFocus_enforce /data/data/LaserFocus_disable
+  symlink /proc/driver/LaserFocus_debug_dump /data/data/LaserFocus_debug_dump
+# ASUS_BSP ---
 
 # ASUS_BSP +++ Peter_Lu "Akm09911 compass sensor & KX022 Gsensor"
-    #  Permissions for Sensors
+	# Permissions for Sensors
     # accelerometer kx022
-    chown system system /sys/bus/i2c/devices/0-001f/enable
+	  chown system system /sys/bus/i2c/devices/0-001f/enable
     chown system system /sys/bus/i2c/devices/0-001f/delay
+    chown system shell /sys/bus/i2c/devices/0-001f/ZenMotion_double_tap
+    chown system shell /sys/bus/i2c/devices/0-001f/ZenMotion_flip
+    chown system shell /sys/bus/i2c/devices/0-001f/ZenMotion_flick
+    chown system shell /sys/bus/i2c/devices/0-001f/ZenMotion_set_flush
 
     chmod 0660 /sys/bus/i2c/devices/0-001f/enable
     chmod 0660 /sys/bus/i2c/devices/0-001f/delay
+    chmod 0660 /sys/bus/i2c/devices/0-001f/ZenMotion_double_tap
+    chmod 0660 /sys/bus/i2c/devices/0-001f/ZenMotion_flip
+    chmod 0660 /sys/bus/i2c/devices/0-001f/ZenMotion_flick
+    chmod 0660 /sys/bus/i2c/devices/0-001f/ZenMotion_set_flush
 
     # AKM E-compass
     chown system system /sys/class/compass/akm09911/enable_acc
@@ -300,463 +154,12 @@ on post-fs-data
     chmod 0774 /sys/bus/i2c/devices/0-000f/Gsensor_raw
     chmod 0774 /sys/bus/i2c/devices/0-000f/Gsensor_status
 
-#ASUS BSP:Enter_Zhang+++
-	chown root system /proc/bootinfo
-#ASUS BSP:Enter_Zhang---
-
-#----------------------------------------------------------------------
-# touch fw update service
-#----------------------------------------------------------------------
-# ASUS BSP Freeman:for firmware updata+++
-service FWAuto /system/bin/fw_auto_update
-#	class main
-	user root
-	group root
-	oneshot
-	disabled
-seclabel u:r:FWAuto:s0
-#ASUS BSP Freeman:for firmware update --------
-
-#----------------------------------------------------------------------
-# change touch node authority
-#----------------------------------------------------------------------
-# ASUS BSP Freeman:change touch node authority+++
-service Nodeauthority /system/bin/touch_node_authority.sh
-	class late_start
-	user root
-	group root
-	oneshot
-#ASUS BSP Freeman:change touch node authority --------
-
-#----------------------------------------------------------------------
-# set color id prop by idcode.sh
-#----------------------------------------------------------------------
-# ASUS BSP Freeman:get color id+++
-service Colorid /system/bin/idcode.sh
-    class late_start
-    user root
-    oneshot
-	seclabel u:r:Colorid:s0
-#ASUS BSP Freeman:get color id --------
-
-# ASUS_BSP +++ Desmond "demoapp related"
-# Disable demoapp by default
-    setprop persist.sys.enableAPD 0
-# ASUS_BSP --- Desmond "demoapp related"
-
     # adding Ecompass service
-#+++ ASUS Alian_Shen "[ZC500KL]akmd"
-#service akmd  /system/bin/akmd09911 -m 4
-#service akmd  /system/bin/akmd09911 -m 1
-#--- ASUS Alian_Shen "[ZC500KL]akmd"
-#    class core
-#    user system
-#    group system misc input
-#    oneshot
+service akmd  /system/bin/akmd09911 -m 4
+    class core
+    user root
+    group root system misc input
+    seclabel u:r:system_app:s0
+    oneshot
 
-#+++ ASUS Alian_Shen "[ZC500KL]akmd"
-#service akmd_fac /system/bin/akmd09911 -s -f -m 1
-#    class late_start
-#    user system
-#    group system misc input
-#    disabled
-#    oneshot
-#--- ASUS Alian_Shen "[ZC500KL]akmd"
 # ASUS_BSP --- Peter_Lu "Akm09911 compass sensor & KX022 Gsensor"
-
-#ASUS_BSP+++ Chance "add for factory check MAC Addr"
-
-service btwifimac /system/bin/sh /system/etc/btwifimac.sh
-    class core
-    user root
-    group root
-    oneshot
-
-service save-hcidump /system/bin/sh /system/etc/init.asus.hcidump.sh
-    class late_start
-    user root
-    group root
-    disabled
-    oneshot
-
-on property:init.svc.save-hcidump=stopped
-    setprop debug.bluetooth.btsnoop false
-    chmod 775 /data/logcat_log
-#ASUS_BSP--- Chance "add for factory check MAC Addr"
-
-# ASUS Freeman add for glove mode switch
-service asusglove /system/bin/sh /system/etc/init.asus.glove.sh
-#    class core
-    oneshot
-    disabled
-
-on property:persist.asus.glove=*
-	start asusglove
-# ASUS Freeman ---
-
-# ASUS Freeman add for double click mode switch
-on property:persist.asus.dclick=0
-	write /sys/bus/i2c/devices/5-0038/dclick_mode 0
-on property:persist.asus.dclick=1
-	write /sys/bus/i2c/devices/5-0038/dclick_mode 1
-# ASUS Freeman ---
-
-# ASUS Freenan add for flipcover mode switch
-service asuscover /system/bin/sh /system/etc/init.asus.cover.sh
-#   class core
-    oneshot
-    disabled
-
-on property:persist.asus.flipcovermode=*
-	start asuscover
-# ASUS Freeman ---
-
-# ASUS Freeman add for gesture mode switch
-service asusgesture /system/bin/sh /system/etc/init.asus.gesture.sh
-#    class core
-    oneshot
-    disabled
-
-on property:persist.asus.gesture.type=*
-	start asusgesture
-# ASUS Freeman ---
-
-# ASUS Freeman add for enable touch check proximity before gesture wake up
-on property:persist.asus.chkproximity=0
-	write /sys/bus/i2c/devices/5-0038/Enable_Proximyty_Check 0
-on property:persist.asus.chkproximity=1
-	write /sys/bus/i2c/devices/5-0038/Enable_Proximyty_Check 1
-# ASUS Freeman ---
-
-#ASUS_BSP +++ widevine
-service ins_key /system/bin/install_key_server
-    class late_start
-    user root
-    group root
-    seclabel u:r:install_key_server:s0
-    disabled
-
-on property:atd.start.key.install=1
-    start ins_key
-
-on property:debug.check.keybox=1
-    start widevine
-
-service widevine /system/bin/sh /system/bin/widevine.sh
-    class late_start
-    disabled
-    oneshot
-#ASUS_BSP --- widevine
-
-# ASUS jacob add for NavigationBar mode switch
-on property:persist.asus.enable_navbar=1
-	setprop qemu.hw.mainkeys 0
-on property:persist.asus.enable_navbar=0
-	setprop qemu.hw.mainkeys 1
-# ASUS jacob ---
-
-
-on property:persist.usb.diag=1
-    insmod /system/lib/modules/diagchar.ko
-    stop adbd
-    start asus-usb-diag
-    start adbd
-
-on property:persist.usb.diag=0
-    start asus-usb-diag
-
-on property:sys.usb.config=rndis,diag,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 05C6
-    write /sys/class/android_usb/android0/idProduct 902D
-    write /sys/class/android_usb/android0/f_diag/clients diag
-    write /sys/class/android_usb/android0/functions rndis,diag,adb
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-#ASUS_BSP+++ jeffery_hu "[ZC550KL][restart][NA][NA] setup qpst download mode properity"
-on property:persist.sys.downloadmode.enable=1
-    write /sys/module/msm_poweroff/parameters/download_mode 1
-
-on property:persist.sys.downloadmode.enable=0
-    write /sys/module/msm_poweroff/parameters/download_mode 0
-#ASUS_BSP--- jeffery_hu "[ZC550KL][restart][NA][NA] setup qpst download mode properity"
-
-#ASUS_BSP+++ Deeo "filldata stress"
-service filldata /system/bin/filldata.sh
-    user root
-    group root
-    disabled
-    oneshot
-
-on property:persist.boot.filldata=1
-    start filldata
-
-on property:persist.boot.filldata=0
-    stop filldata
-#ASUS_BSP--- Deeo "filldata stress"
-
-#ASUS_BSP+++ Deeo "add fsstress"
-service fsstress /system/bin/fsstress-run.sh
-    user root
-    group root
-    disabled
-    oneshot
-
-on property:persist.boot.runfsstress=1
-    start fsstress
-
-on property:persist.boot.runfsstress=0
-    stop fsstress
-#ASUS_BSP--- Deeo "add fsstress"
-
-#ASUS_BSP+++ [thomas] enable user version debug
-service asusdebug /system/bin/sh /system/etc/prepare_asusdebug.sh
-    class late_start
-    oneshot
-    disabled
-on property:persist.asus.debug=1
-	export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin:/data/debug
-	start asusdebug
-#ASUS_BSP--- [thomas] enable user version debug
-
-# +++ ASUS_BSP : add for asus boot animation partition
-#mount APD
-on property:persist.sys.enableAPD=1
-    wait /dev/block/bootdevice/by-name/APD
-    mount ext4 /dev/block/bootdevice/by-name/APD /APD nosuid nodev barrier=1 data=ordered
-    chmod 0775 /APD
-    chown system system /APD
-    restorecon_recursive /APD
-
-#unmount APD
-on property:persist.sys.enableAPD=0
-    start umount_apd
-# --- ASUS_BSP : add for asus boot animation partition
-
-#+++ASUS_BSP : add for charger mode to enable uart console , adb and mount asdf folder
-on charger-zc550kl
-    setprop sys.usb.config mass_storage
-#service qseecomd for facotry to check keybox
-	start qseecomd
-    wait /dev/block/bootdevice/by-name/persist
-    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
-    mkdir /persist/data 0700 system system
-    restorecon_recursive /persist
-
-    wait /dev/block/bootdevice/by-name/modem
-    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro context=u:object_r:firmware_file:s0,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-    write /sys/kernel/boot_adsp/boot 1   
-   
-    wait /dev/block/bootdevice/by-name/factory
-    exec /system/bin/e2fsck -p /dev/block/bootdevice/by-name/factory
-    mount ext4 /dev/block/bootdevice/by-name/factory /factory ro nosuid nodev barrier=1 noauto_da_alloc
-    restorecon_recursive /factory
-    chmod 0775 /factory
-    chown system system /factory
-    
-    start rmt_storage
-    
-    chown root system /sys/class/power_supply/bms/current_now
-    chown root system /sys/class/power_supply/bms/voltage_ocv
-    chmod 0664 /sys/class/power_supply/bms/current_now
-    chmod 0664 /sys/class/power_supply/bms/voltage_ocv
-    start vm_bms
-    load_all_props
-    start qcom-post-boot
-    class_start charger
-#mount asdf
-    wait /dev/block/bootdevice/by-name/asdf
-    exec /system/bin/e2fsck -p /dev/block/bootdevice/by-name/asdf
-    mount ext4 /dev/block/bootdevice/by-name/asdf /asdf nosuid nodev barrier=1
-
-    write /proc/asusevtlog  "ASDF: Check LastShutdown log."
-    write /proc/asusdebug  get_asdf_log
-    write /proc/asusevtlog "charger: enter charger mode"
-#---ASUS_BSP : add for charger mode to enable uart console , adb and mount asdf folder
-
-# +++ ASUS BSP : add for verify voucher
-service VerifyVouchers /system/bin/VerifyVouchers
-    user root
-    oneshot
-
-on property:sys.boot_completed=1
-    start VerifyVouchers
-# --- ASUS BSP : add for verify voucher
-
-
-# +++ ASUS_BSP : add for user unlock 
-service writekey /system/bin/writekey
-    class core
-    oneshot
-    disabled
-
-on property:debug.write.asuskey=1
-    start writekey
-# --- ASUS_BSP : add for user unlock 
-
-service asus-usb-diag  /system/bin/sh /init.asus.usb.diag.sh
-    class main
-    user root
-    disabled
-    oneshot
-    
-#+++ [ZC550KL] ASUS_BSP suri_gu@asus.com for screen off in factory mode when sys.screentimeout=1
-on property:sys.screentimeout=1
-    write /sys/class/leds/green/brightness 0
-    write /sys/class/leds/red/brightness 0
-    write /proc/driver/screenofftimeout 1
-
-on property:sys.screentimeout=0
-    write /proc/driver/screenofftimeout 0
-#--- [ZC550KL] ASUS_BSP
-
-# ASUS_BSP  Guochang_Qiu  add for SMMI/yepdiag factory service+++
-#SMMITool
-service  openfactory /system/bin/sh /system/etc/openfactory.sh
-    class main
-    user root
-    oneshot  
-    
-#Yepdiag   
-service yepdiag /system/bin/yepdiag
-    class main
-    user root
-    disabled
-    seclabel u:r:yepdiag:s0
-    
-#excute the mmi function
-on property:sys.config.factorystart=1
-   start openfactory
-# ASUS_BSP Guochang_Qiu  add for SMMI/yepdiag factory service ---
-
-#ASUS_BSP+++ ShowWang "[ZC550KL][USB][NA][Spec] Enable otg poweron switching"
-on property:persist.usb.otg.poweron=1
-    write /proc/msm_otg/otg_poweron 1
-
-on property:persist.usb.otg.poweron=0
-    write /proc/msm_otg/otg_poweron 0
-#ASUS_BSP--- ShowWang "[ZC550KL][USB][NA][Spec] Enable otg poweron switching"
-
-# +++ ASUS_BSP Lei_Guo : add for switch selinux +++
-on property:asus.logtool.sf=1
-     write /proc/rd asussetenforce:1
-
-on property:asus.logtool.sf=0
-     write /proc/rd asussetenforce:0
-# --- ASUS_BSP Lei_Guo : add for switch selinux ---
-
-# ASUS_BSP+++ ShowWang "add properties to check the otg at boot"
-on property:sys.boot_completed=1
-    write /proc/msm_otg/otg_boot_check 1
-# ASUS_BSP--- ShowWang "add properties to check the otg at boot"
-
-# ASUS_BSP---ShowWang "add configs to support HQ diag in factory mode"
-on diag
-#config diag driver
-    insmod /system/lib/modules/diagchar.ko
-    stop adbd
-    mkdir /dev/usb-ffs 0770 shell shell
-    mkdir /dev/usb-ffs/adb 0770 shell shell
-    mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
-    write /sys/class/android_usb/android0/f_ffs/aliases adb
-    write /sys/class/android_usb/android0/diag 1
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/f_diag/clients diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,tty
-    write /sys/class/android_usb/android0/functions diag,adb,serial
-    write /sys/class/android_usb/android0/iSerial  C4ATAS000000
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.diag 1
-    start adbd
-    start qcomsysd
-    start yepdiag
-
-on usb-config-none
-#config usb none
-    write /sys/class/android_usb/android0/enable 0
-    write  /sys/class/android_usb/android0/functions mtp
-    write /sys/class/android_usb/android0/diag 1
-    write /sys/class/android_usb/android0/enable 1
-
-on system_mount
-#mount system partition
-	wait /dev/block/bootdevice/by-name/system
-    mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
-
-on property:sys.usb.charger.factory=0
-    stop adbd
-    write /sys/class/android_usb/android0/diag 0
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/bDeviceClass 0
-    setprop sys.usb.config none
-# ASUS_BSP---ShowWang "add configs to support HQ diag in factory mode"
-
-# Enter_Zhang Add for sysconf +++
-on property:sys.config.klog=1
-    config_sys 7C89FDAB
-
-on property:sys.config.klog=0
-    config_sys 79ACB239
-
-on property:sys.config.uartlog=1
-    config_sys 7E8BDCA5
-
-on property:sys.config.uartlog=0
-    config_sys 768CF5D9
-
-# ASUS_BSP +++ johnchain_li switch factory/ship mode to modem by sys.factory.close
-service  ModemFactory /system/bin/AsusCommandSpecial 51 1 01
-    user root
-    oneshot
-    disabled
-service  ModemShip /system/bin/AsusCommandSpecial 51 1 00
-    user root
-    oneshot
-    disabled
-# ASUS_BSP --- johnchain_li switch factory/ship mode to modem by sys.factory.close
-on property:sys.factory.close=mmi_begin
-    start ModemFactory
-    setprop persist.sys.modem.restart 0
-    config_sys 72587539
-
-on property:sys.factory.close=mmi_end
-    start ModemShip
-    setprop persist.sys.modem.restart 12
-    config_sys 74521DC6
-
-on property:sys.factoryback.check=1
-    config_sys 75695362
-# Enter_Zhang Add for sysconf ---
-
-# ASUS_BSP +++ Peter_Lu "Copy Laser calibration data to factory partition in user device"
-on property:debug.asus.setfactorydata=1
-	mount ext4 /dev/block/bootdevice/by-name/factory /factory remount rw nosuid nodev barrier=1 noauto_da_alloc
-    copy /data/media/0/LaserFocus_Calibration10.txt /factory/LaserFocus_Calibration10.txt
-    copy /data/media/0/LaserFocus_Calibration40.txt /factory/LaserFocus_Calibration40.txt
-    copy /data/media/0/laura_cal_data.txt /factory/laura_cal_data.txt
-    chown media shell /factory/LaserFocus_Calibration10.txt
-    chown media shell /factory/LaserFocus_Calibration40.txt
-    chown media shell /factory/sdcard/laura_cal_data.txt
-    chmod 0664 /factory/LaserFocus_Calibration10.txt
-    chmod 0664 /factory/LaserFocus_Calibration40.txt
-    chmod 0664 /factory/laura_cal_data.txt
-    rm /data/media/0/LaserFocus_Calibration10.txt
-    rm /data/media/0/LaserFocus_Calibration40.txt
-    rm /data/media/0/laura_cal_data.txt
-    write /factory/LaserFocus_CSC_Calibration.txt  "Calibration by CSC"
-    mount ext4 /dev/block/bootdevice/by-name/factory /factory remount ro nosuid nodev barrier=1 noauto_da_alloc
-# ASUS_BSP ---
-
-# +++ ASUS_BSP tyree_liu@asus.com for audio factory test
-service asus_audiotest /system/bin/sh /system/etc/audio.test.sh
-    user root
-    group root
-    disabled
-    oneshot
-    seclabel u:r:asus_audiotest:s0
-
-on property:persist.asus.audiotestenable=1
-    start asus_audiotest
-# --- ASUS_BSP tyree_liu@asus.com for audio factory test
