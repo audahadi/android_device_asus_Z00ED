@@ -26,7 +26,7 @@ TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
 # Kernel
 TARGET_KERNEL_CONFIG := ze500kl-custom_defconfig
-TARGET_KERNEL_SOURCE := kernel/asus/Z010D
+TARGET_KERNEL_SOURCE := kernel/asus/Z00ED
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive
 
 # Properties
