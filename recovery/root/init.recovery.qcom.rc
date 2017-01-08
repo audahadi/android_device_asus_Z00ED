@@ -1,0 +1,27 @@
+on init
+    wait /dev/battery_data
+    wait /dev/ion
+    wait /dev/qseecom
+    wait /dev/vm_bms
+
+    chown system system /dev/battery_data
+    chown system system /dev/ion
+    chown system drmrpc /dev/qseecom
+    chown system system /dev/vm_bms
+
+    chown root system /sys/class/power_supply/bms/current_now
+    chown root system /sys/class/power_supply/bms/voltage_ocv
+    chmod 0664 /sys/class/power_supply/bms/current_now
+    chmod 0664 /sys/class/power_supply/bms/voltage_ocv
+
+    start qseecomd
+    start vm_bms
+
+service qseecomd /sbin/qseecomd
+    disabled
+
+service vm_bms /sbin/vm_bms
+    disabled
+
+on property:ro.twrp.boot=1
+    write /proc/boot_completed_prop 1
