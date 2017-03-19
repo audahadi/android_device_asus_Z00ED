@@ -106,9 +106,6 @@ void vendor_load_properties()
     sprintf(b_fingerprint, "asus/%s/ASUS_%s:6.0.1/MMB29P/13.10.10.44-20161026:user/release-keys", family, device);
     sprintf(p_carrier, "US-ASUS_%s-%s", device, family);
 
-    property_set("ro.build.description", b_description);
-    property_set("ro.build.fingerprint", b_fingerprint);
-    property_set("ro.product.carrier", p_carrier);
     property_set("ro.product.device", "ASUS_Z00E_2");
     property_set("ro.product.model", "ASUS_Z00ED");
     property_set("ro.build.product", "ZE500KL");
