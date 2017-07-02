@@ -35,7 +35,6 @@ TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 # Flags
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
-COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60
 
 # Architecture
 TARGET_ARCH := arm64
@@ -51,7 +50,6 @@ TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := generic
 
-# Kernel
 # Kernel
 BOARD_DTBTOOL_ARGS := -3
 BOARD_KERNEL_BASE := 0x80000000
